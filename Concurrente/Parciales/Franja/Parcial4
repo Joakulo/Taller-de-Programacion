@@ -1,0 +1,226 @@
+programa Parcial4
+procesos
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores +1
+  fin
+  proceso juntarPapeles(ES papeles:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      papeles := papeles +1
+  fin
+areas
+  CJ:AreaP(14,6,14,6)
+  Izquierda:AreaPC(3,3,13,13)
+  Derecha:AreaPC(16,3,26,13)
+robots
+  robot Rjefe
+  variables
+    ID, aux, cant1, cant2:numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+    cant1:=0
+    cant2:=0
+    repetir 4
+      RecibirMensaje(ID,*)
+      si (ID=1)
+        RecibirMensaje(aux,r1)
+        cant1:=cant1 + aux
+      sino
+        si (ID=2)
+          RecibirMensaje(aux,r2)
+          cant1:=cant1 +aux
+        sino
+          si (ID=3)
+            RecibirMensaje(aux,r3)
+            cant2:=cant2 +aux
+          sino
+            RecibirMensaje(aux,r4)
+            cant2:=cant2 +aux
+    si (cant1 > cant2)
+      Informar(1)
+    sino
+      Informar(2)
+  fin
+  robot Florero
+  variables
+    ID,flores, av, ca:numero
+  comenzar
+    RecibirMensaje(ID,jefe)
+    flores:=0
+
+    av:=PosAv
+    ca:=PosCa +1
+    BloquearEsquina(av,ca)
+    mover
+    juntarFlores(flores)
+    ca:=ca +1
+    repetir 9
+      BloquearEsquina(av,ca)
+      mover
+      juntarFlores(flores)
+      ca:=ca -1
+      LiberarEsquina(av,ca)
+      ca:=ca +2
+
+    derecha
+
+    av:=PosAv +1
+    ca:=PosCa
+    BloquearEsquina(av,ca)
+    mover
+    av:=av -1
+    LiberarEsquina(av,ca)
+    juntarFlores(flores)
+    av:=av +2
+    repetir 9
+      BloquearEsquina(av,ca)
+      mover
+      juntarFlores(flores)
+      av:=av -1
+      LiberarEsquina(av,ca)
+      av:=av +2
+
+    derecha
+
+    av:=PosAv
+    ca:=PosCa -1
+    BloquearEsquina(av,ca)
+    mover
+    ca:=ca+1
+    LiberarEsquina(av,ca)
+    juntarFlores(flores)
+    ca:=ca -2
+    repetir 9
+      BloquearEsquina(av,ca)
+      mover
+      juntarFlores(flores)
+      ca:=ca +1
+      LiberarEsquina(av,ca)
+      ca:=ca -2
+    
+    derecha
+
+    av:=PosAv -1
+    ca:=PosCa
+    BloquearEsquina(av,ca)
+    mover
+    av:=av +1
+    LiberarEsquina(av,ca)
+    juntarFlores(flores)
+    av:=av -2
+    repetir 9
+      BloquearEsquina(av,ca)
+      mover
+      juntarFlores(flores)
+      av:=av +1
+      LiberarEsquina(av,ca)
+      av:=av -2
+    
+    EnviarMensaje(ID,jefe)
+    EnviarMensaje(flores,jefe)
+  fin
+  robot Papelero
+  variables
+    ID,papeles, av, ca:numero
+  comenzar
+    RecibirMensaje(ID,jefe)
+    papeles:=0
+    derecha
+    derecha
+
+    av:=PosAv
+    ca:=PosCa -1
+    BloquearEsquina(av,ca)
+    mover
+    juntarPapeles(papeles)
+    ca:=ca -1
+    repetir 9
+      BloquearEsquina(av,ca)
+      mover
+      juntarPapeles(papeles)
+      ca:=ca +1
+      LiberarEsquina(av,ca)
+      ca:=ca -2
+    
+    derecha
+
+    av:=PosAv -1
+    ca:=PosCa
+    BloquearEsquina(av,ca)
+    mover
+    av:=av +1
+    LiberarEsquina(av,ca)
+    juntarPapeles(papeles)
+    av:=av -2
+    repetir 9
+      BloquearEsquina(av,ca)
+      mover
+      juntarPapeles(papeles)
+      av:=av +1
+      LiberarEsquina(av,ca)
+      av:=av -2
+
+    derecha
+
+    av:=PosAv
+    ca:=PosCa +1
+    BloquearEsquina(av,ca)
+    mover
+    ca:=ca -1
+    LiberarEsquina(av,ca)
+    juntarPapeles(papeles)
+    ca:=ca +2
+    repetir 9
+      BloquearEsquina(av,ca)
+      mover
+      juntarPapeles(papeles)
+      ca:=ca -1
+      LiberarEsquina(av,ca)
+      ca:=ca +2
+
+    derecha
+
+    av:=PosAv +1
+    ca:=PosCa
+    BloquearEsquina(av,ca)
+    mover
+    av:=av -1
+    LiberarEsquina(av,ca)
+    juntarPapeles(papeles)
+    av:=av +2
+    repetir 9
+      BloquearEsquina(av,ca)
+      mover
+      juntarPapeles(papeles)
+      av:=av -1
+      LiberarEsquina(av,ca)
+      av:=av +2
+
+    EnviarMensaje(ID,jefe)
+    EnviarMensaje(papeles,jefe)
+  fin
+variables
+  jefe:Rjefe
+  r1:Florero
+  r2:Florero
+  r3:Papelero
+  r4:Papelero
+comenzar
+  AsignarArea(jefe,CJ)
+  AsignarArea(r1,Izquierda)
+  AsignarArea(r2,Derecha)
+  AsignarArea(r3,Izquierda)
+  AsignarArea(r4,Derecha)
+  Iniciar(jefe,14,6)
+  Iniciar(r1,3,3)
+  Iniciar(r2,16,3)
+  Iniciar(r3,13,13)
+  Iniciar(r4,26,13)
+fin

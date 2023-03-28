@@ -1,0 +1,149 @@
+programa Parcial0Franja
+procesos 
+  proceso EnviarMaximo (E cant1:numero; E cant2:numero; E cant3:numero; E cant4:numero)
+  variables
+    max,ID:numero
+  comenzar
+    max:=-1
+    ID:=1
+    si (cant2 > max)
+      max := cant2
+      ID := 2
+    si (cant3 > max)
+      max := cant3
+      ID := 3
+    si (cant4 > max)
+      max := cant3
+      ID := 4
+    si (ID=1)
+      Informar(ID)
+      EnviarMensaje(1,r1)
+      EnviarMensaje(0,r2)
+      EnviarMensaje(0,r3)
+      EnviarMensaje(0,r4)
+    sino
+      si (ID=2)
+        Informar(ID)
+        EnviarMensaje(0,r1)
+        EnviarMensaje(1,r2)
+        EnviarMensaje(0,r3)
+        EnviarMensaje(0,r4)
+      sino
+        si (ID=3)
+          Informar(ID)
+          EnviarMensaje(0,r1)
+          EnviarMensaje(0,r2)
+          EnviarMensaje(1,r3)
+          EnviarMensaje(0,r4)
+        sino
+          Informar(ID)
+          EnviarMensaje(0,r1)
+          EnviarMensaje(0,r2)
+          EnviarMensaje(0,r3)
+          EnviarMensaje(1,r4)
+  fin
+  proceso juntar (E ID:numero; ES flores:numero; ES papeles:numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:=papeles +1
+      EnviarMensaje(ID,jefe)
+      EnviarMensaje(1,jefe)
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores +1
+      EnviarMensaje(ID,jefe)
+      EnviarMensaje(1,jefe)
+    EnviarMensaje(ID,jefe)
+    EnviarMensaje(0,jefe)
+  fin
+  proceso depositar (E flores:numero; E papeles:numero)
+  comenzar
+    repetir flores
+      depositarFlor
+    repetir papeles
+      depositarPapel
+  fin
+areas
+  CJ:AreaP(1,1,1,1)
+  C1:AreaPC(45,48,62,69)
+  C2:AreaPC(10,10,13,10)
+robots
+  robot CJefe
+  variables
+    fin1, fin2, fin3, fin4, cant1, cant2, cant3, cant4, ID:numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+    repetir 5
+      fin1:=1
+      fin2:=1
+      fin3:=1
+      fin4:=1
+      cant1:=0
+      cant2:=0
+      cant3:=0
+      cant4:=0
+      mientras ((fin1=1) | (fin2=1) | (fin3=1) | (fin4=1))
+        RecibirMensaje(ID,*)
+        si (ID=1)
+          RecibirMensaje(fin1,r1)
+          cant1 := cant1 + fin1
+        sino
+          si (ID=2)
+            RecibirMensaje(fin2,r2)
+            cant2 := cant2 + fin2
+          sino
+            si (ID=3)
+              RecibirMensaje(fin3,r3)
+              cant3 := cant3 + fin3
+            sino
+              RecibirMensaje(fin4,r4)
+              cant4 := cant4 + fin4
+      EnviarMaximo(cant1,cant2,cant3,cant4)             
+  fin
+  robot recolector
+  variables
+    ID,flores,papeles,av,ca,av2,ca2,ACK:numero
+  comenzar
+    RecibirMensaje(ID,jefe)
+    av:=PosAv
+    ca:=PosCa
+    repetir 5
+      flores:=0
+      papeles:=0
+      Random(av2,45,62)
+      Random(ca2,48,69)
+      BloquearEsquina(av2,ca2)
+      Pos(av2,ca2)
+      juntar(ID,flores,papeles)
+      Pos(av,ca)
+      LiberarEsquina(av2,ca2)
+      RecibirMensaje(ACK,jefe)
+      si (ACK=1)
+        depositar(flores,papeles)
+  fin
+variables
+  jefe:CJefe
+  r1:recolector
+  r2:recolector
+  r3:recolector
+  r4:recolector
+comenzar
+  AsignarArea(jefe,CJ)
+  AsignarArea(r1,C1)
+  AsignarArea(r1,C2)
+  AsignarArea(r2,C1)
+  AsignarArea(r2,C2)
+  AsignarArea(r3,C1)
+  AsignarArea(r3,C2)
+  AsignarArea(r4,C1)
+  AsignarArea(r4,C2)
+  Iniciar(jefe,1,1)
+  Iniciar(r1,10,10)
+  Iniciar(r2,11,10)
+  Iniciar(r3,12,10)
+  Iniciar(r4,13,10)
+fin

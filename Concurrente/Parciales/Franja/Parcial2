@@ -1,0 +1,184 @@
+programa Parcial2
+procesos
+  proceso juntar(ES flores:numero; ES papeles:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores +1
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:=papeles +1
+  fin
+  proceso Accion(ES flores:numero; ES papeles:numero)
+  comenzar
+    repetir 2
+      mover
+      juntar(flores,papeles)
+  fin
+  proceso RecorridoHorizontal(ES flores:numero; ES papeles:numero)
+  variables
+    av,ca:numero
+  comenzar
+    av:=PosAv +1
+    ca:=PosCa +2
+    Accion(flores,papeles)
+    derecha
+    BloquearEsquina(av,ca)
+    Accion(flores,papeles)
+    LiberarEsquina(av,ca)
+    BloquearEsquina(av+2,ca)
+    Accion(flores,papeles)
+    LiberarEsquina(av+2,ca)
+    BloquearEsquina(av+4,ca)
+    Accion(flores,papeles)
+    LiberarEsquina(av+4,ca)
+    BloquearEsquina(av+6,ca)
+    Accion(flores,papeles)
+    LiberarEsquina(av+6,ca)
+    derecha
+    ca:=ca -2
+    Accion(flores,papeles)
+    derecha
+    BloquearEsquina(av+6,ca)
+    Accion(flores,papeles)
+    LiberarEsquina(av+6,ca)
+    BloquearEsquina(av+4,ca)
+    Accion(flores,papeles)
+    LiberarEsquina(av+4,ca)
+    BloquearEsquina(av+2,ca)
+    Accion(flores,papeles)
+    LiberarEsquina(av+2,ca)
+    BloquearEsquina(av,ca)
+    Accion(flores,papeles)
+    LiberarEsquina(av,ca)
+    derecha
+  fin
+  proceso RecorridoVertical(ES flores:numero; ES papeles:numero)
+  variables
+    av,ca:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa +1
+    BloquearEsquina(av,ca)
+    Accion(flores,papeles)
+    LiberarEsquina(av,ca)
+    BloquearEsquina(av,ca+2)
+    Accion(flores,papeles)
+    LiberarEsquina(av,ca+2)
+    BloquearEsquina(av,ca+4)
+    Accion(flores,papeles)
+    LiberarEsquina(av,ca+4)
+    BloquearEsquina(av,ca+6)
+    Accion(flores,papeles)
+    LiberarEsquina(av,ca+6)
+    derecha
+    Accion(flores,papeles)
+    derecha
+    av := av +2
+    BloquearEsquina(av,ca+6)
+    Accion(flores,papeles)
+    LiberarEsquina(av,ca+6)
+    BloquearEsquina(av,ca+4)
+    Accion(flores,papeles)
+    LiberarEsquina(av,ca+4)
+    BloquearEsquina(av,ca+2)
+    Accion(flores,papeles)
+    LiberarEsquina(av,ca+2)
+    BloquearEsquina(av,ca)
+    Accion(flores,papeles)
+    LiberarEsquina(av,ca)
+    derecha
+    Accion(flores,papeles)
+  fin
+areas
+  CJ:AreaP(20,15,20,15)
+  C:AreaC(1,1,9,9)
+  C0:AreaC(20,1,20,5)
+robots
+  robot Rjefe
+  variables
+    ID,cantF,cantP,aux:numero
+  comenzar
+    repetir 4
+      RecibirMensaje(ID,*)
+      si (ID=1)
+        RecibirMensaje(aux,r1)
+        cantF:=cantF + aux
+        RecibirMensaje(aux,r1)
+        cantP:=cantP + aux
+      sino
+        si (ID=2)
+          RecibirMensaje(aux,r2)
+          cantF:=cantF + aux
+          RecibirMensaje(aux,r2)
+          cantP:=cantP + aux
+        sino
+          si (ID=3)
+            RecibirMensaje(aux,r3)
+            cantF:=cantF + aux
+            RecibirMensaje(aux,r3)
+            cantP:=cantP + aux
+          sino
+            RecibirMensaje(aux,r4)
+            cantF:=cantF + aux
+            RecibirMensaje(aux,r4)
+            cantP:=cantP + aux
+    Informar(cantF)
+    Informar(cantP)        
+  fin
+  robot horizontal
+  variables
+    flores,papeles,ID:numero
+  comenzar
+    si (PosCa=1)
+      Pos(1,2)
+      ID:=1
+    sino
+      Pos(1,6)
+      ID:=2
+    flores:=0
+    papeles:=0
+    RecorridoHorizontal(flores,papeles)
+    EnviarMensaje(ID,jefe)
+    EnviarMensaje(flores,jefe)
+    EnviarMensaje(papeles,jefe)
+  fin
+  robot vertical
+  variables
+    flores, papeles, ID:numero
+  comenzar
+    si (PosCa=4)
+      Pos(2,1)
+      ID:=3
+    sino
+      Pos(6,1)
+      ID:=4
+    flores:=0
+    papeles:=0
+    RecorridoVertical(flores,papeles)
+    EnviarMensaje(ID,jefe)
+    EnviarMensaje(flores,jefe)
+    EnviarMensaje(papeles,jefe)
+  fin
+variables
+  jefe:Rjefe
+  r1:horizontal
+  r2:horizontal
+  r3:vertical
+  r4:vertical
+comenzar
+  AsignarArea(jefe,CJ)
+  AsignarArea(r1,C)
+  AsignarArea(r1,C0)
+  AsignarArea(r2,C)
+  AsignarArea(r2,C0)
+  AsignarArea(r3,C)
+  AsignarArea(r3,C0)
+  AsignarArea(r4,C)
+  AsignarArea(r4,C0)
+  Iniciar(jefe,20,15)
+  Iniciar(r1,20,1)
+  Iniciar(r2,20,2)
+  Iniciar(r3,20,4)
+  Iniciar(r4,20,5)
+fin

@@ -1,0 +1,99 @@
+programa Ejercicio2
+procesos
+  proceso depositarPapeles(ES papeles:numero; E Av:numero; E Ca:numero)
+  comenzar
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    repetir 5
+      depositarPapel
+    papeles := 0
+    Pos(Av,Ca)
+    LiberarEsquina(50,50)
+  fin
+  proceso juntarPapeles(ES papeles:numero)
+  comenzar
+    mientras ((HayPapelEnLaEsquina) & (papeles < 5))
+      tomarPapel
+      papeles := papeles +1
+  fin
+
+  proceso contarPapeles(E cantP:numero; ES cantFin:numero)
+  comenzar
+    mientras ((HayPapelEnLaEsquina) & (cantFin < cantP))
+      tomarPapel
+      cantFin := cantFin +1
+    repetir cantFin
+      depositarPapel
+  fin
+  
+  proceso tomarPapeles(E cantP:numero)
+  comenzar
+    repetir cantP
+      tomarPapel
+  fin
+  
+  proceso IrAEsquina(ES cantP:numero; E Av:numero; E Ca:numero; ES cantV:numero)
+  variables
+    cantFin:numero
+  comenzar
+    cantFin := 0
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    contarPapeles(cantP,cantFin)
+    si (cantP = cantFin)
+      tomarPapeles(cantP)
+    sino
+      cantV:=cantV +1
+    Pos(Av,Ca)
+    LiberarEsquina(50,50)
+  fin
+areas
+  P1:AreaP(5,1,5,100)
+  P2:AreaP(10,1,10,100)
+  C1:AreaP(11,1,11,1)
+  C2:AreaP(12,1,12,1)
+  C50:AreaC(50,50,50,50)
+robots
+  robot productor
+  variables
+    papeles:numero
+  comenzar
+    mientras (PosCa < 100)
+      papeles:=0    
+      mientras ((PosCa < 100) & (papeles < 5))  
+        juntarPapeles(papeles)
+        si (papeles < 5)
+          mover
+        sino
+          depositarPapeles(papeles, PosAv, PosCa)
+  fin
+  robot consumidor
+  variables
+    cantP, Av, Ca, cantV:numero
+  comenzar
+    Av:=PosAv
+    Ca:=PosCa
+    cantV:=0
+    mientras (cantV <> 8)
+      Random(cantP,2,5)
+      IrAEsquina(cantP,Av,Ca,cantV)
+  fin
+variables
+  prod1:productor
+  prod2:productor
+  cons1:consumidor
+  cons2:consumidor
+comenzar
+  AsignarArea(prod1,P1)
+  AsignarArea(prod2,P2)
+  AsignarArea(cons1,C1)
+  AsignarArea(cons2,C2)
+  AsignarArea(prod1,C50)
+  AsignarArea(prod2,C50)
+  AsignarArea(cons1,C50)
+  AsignarArea(cons2,C50)
+  Iniciar(prod1,5,1)
+  Iniciar(prod2,10,1)
+  Iniciar(cons1,11,1)
+  Iniciar(cons2,12,1)
+fin

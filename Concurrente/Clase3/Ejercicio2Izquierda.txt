@@ -1,0 +1,47 @@
+  proceso SubidaFlores1 (ES f:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:=5
+    repetir 4
+      repetir cant
+        mover
+      juntarFlores(f)		.
+      derecha			.
+      repetir cant
+        mover
+      izquierda			.
+      juntarFlores(f)		.
+      cant := cant - 1
+    mover
+    juntarFlores(f)		.
+    derecha			.
+    BloquearEsquina(16,16)
+    mover
+    juntarFlores(f)		.
+    derecha
+    derecha
+    mover
+    LiberarEsquina(16,16)
+  fin
+  proceso SubidaFlores2 (ES f:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:=2
+    repetir 4
+      repetir cant
+        mover
+      juntarFlores(f)		.
+      derecha			.
+      repetir cant
+        mover
+      izquierda			.
+      juntarFlores(f)		.
+      cant := cant + 1
+  fin
+  proceso EscaleraFlores(ES f:numero)
+  comenzar
+    SubidaFlores1(f)
+    SubidaFlores2(f)
+  fin

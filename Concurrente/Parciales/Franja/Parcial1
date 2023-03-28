@@ -1,0 +1,124 @@
+programa Parcial1
+areas
+  CJ:AreaP(1,1,1,1)
+  C1:AreaP(5,5,5,16)
+  C12:AreaP(6,4,9,4)
+  C11:AreaPC(5,4,5,4)
+  C2:AreaP(11,5,11,16)
+  C22:AreaP(12,4,15,4)
+  C21:AreaPC(11,4,11,4)
+  C0:AreaPC(50,50,53,53)
+  C00:AreaPC(15,15,15,15)
+robots
+  robot  Rjefe
+  variables
+    cant1, cant2, equipo:numero
+  comenzar
+    EnviarMensaje(1,L11)
+    EnviarMensaje(1,L12)
+    EnviarMensaje(2,L21)
+    EnviarMensaje(2,L22)
+    cant1:=0
+    cant2:=0
+    mientras (cant1 < 2) & (cant2 < 2)
+      RecibirMensaje(equipo,*)
+      si (equipo = 1)
+        cant1 := cant1 +1
+      sino
+        cant2 := cant2 +1
+    si (cant1 > cant2)
+      Informar(1)
+    sino
+      Informar(2)
+  fin
+  robot vertical
+  variables
+    equipo,av,ca:numero
+  comenzar
+    RecibirMensaje(equipo, jefe)
+    si (equipo=1)
+      av := 5
+    sino
+      av := 11
+    ca:=4
+    BloquearEsquina(15,15)
+    Pos(15,15)
+    tomarPapel
+    BloquearEsquina(av,ca)
+    Pos(av,ca)
+    LiberarEsquina(15,15)
+    depositarPapel
+    mover
+    LiberarEsquina(av,ca)
+    ca:= ca +1
+    repetir 12
+      BloquearEsquina(15,15)
+      Pos(15,15)
+      tomarPapel
+      Pos(av,ca)
+      LiberarEsquina(15,15)
+      depositarPapel
+      ca:= ca +1
+    EnviarMensaje(equipo,jefe)
+  fin
+  robot horizontal
+  variables
+    equipo,av,ca:numero
+  comenzar
+    RecibirMensaje(equipo,jefe)
+    si (equipo=1)
+      av:=5
+    sino
+      av:=11
+    ca:=4
+    derecha
+    BloquearEsquina(15,15)
+    Pos(15,15)
+    tomarFlor
+    BloquearEsquina(av,ca)
+    Pos(av,ca)
+    LiberarEsquina(15,15)
+    depositarFlor
+    mover
+    LiberarEsquina(av,ca)
+    av:= av +1
+    repetir 4
+      BloquearEsquina(15,15)
+      Pos(15,15)
+      tomarFlor
+      Pos(av,ca)
+      LiberarEsquina(15,15)
+      depositarFlor
+      av:= av +1
+    EnviarMensaje(equipo,jefe)
+  fin
+variables
+  jefe: Rjefe
+  L11:vertical
+  L12:horizontal
+  L21:vertical
+  L22:horizontal
+comenzar
+  AsignarArea(jefe,CJ)
+  AsignarArea(L11,C1)
+  AsignarArea(L11,C0)
+  AsignarArea(L11,C11)
+  AsignarArea(L12,C12)
+  AsignarArea(L12,C0)
+  AsignarArea(L12,C11)
+  AsignarArea(L21,C2)
+  AsignarArea(L21,C0)
+  AsignarArea(L21,C21)
+  AsignarArea(L22,C22)
+  AsignarArea(L22,C0)
+  AsignarArea(L22,C21)
+  AsignarArea(L11,C00)
+  AsignarArea(L12,C00)
+  AsignarArea(L21,C00)
+  AsignarArea(L22,C00)
+  Iniciar(jefe,1,1)
+  Iniciar(L11,50,50)
+  Iniciar(L12,51,51)
+  Iniciar(L21,52,52)
+  Iniciar(L22,53,53)
+fin

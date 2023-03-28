@@ -1,0 +1,155 @@
+programa Parcial3
+procesos
+  proceso EnviarValores
+  variables
+    A,AV:numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(1,r2)
+    EnviarMensaje(2,r3)
+    EnviarMensaje(2,r4)
+    Random(A,1,5)
+    Random(AV,1,95)
+    EnviarMensaje(A,r1)
+    EnviarMensaje(A,r2)
+    EnviarMensaje(A,r3)
+    EnviarMensaje(A,r4)
+    EnviarMensaje(AV,r1)
+    EnviarMensaje(AV,r2)
+    EnviarMensaje(AV,r3)
+    EnviarMensaje(AV,r4)
+  fin
+  proceso juntarRectangulo(ES flores:numero; E A:numero)
+  comenzar
+    repetir 2
+      repetir 15
+        mover
+        mientras (HayFlorEnLaEsquina)
+          tomarFlor
+          flores := flores +1
+      derecha
+      repetir A
+        mover
+        mientras (HayFlorEnLaEsquina)
+          tomarFlor
+          flores := flores +1
+      derecha
+  fin
+  proceso depositarFlores(E flores:numero; E equipo:numero)
+  variables
+    av,ca, ca2:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    si (equipo = 1)
+      ca2:=15
+    sino
+      ca2:=40
+    repetir flores
+      Pos(5,ca2)
+      depositarFlor
+      Pos(av,ca)
+  fin
+  proceso recogerFlores(E esquinas:numero; E ca2:numero; E OGav:numero; E OGca:numero)
+  comenzar
+    repetir esquinas
+      Pos(5,ca2)
+      tomarFlor
+      Pos(OGav,OGca)
+  fin
+  proceso depositarRectangulo(E A:numero; E AV:numero; E equipo:numero)
+  comenzar
+    si (equipo = 1)
+      Pos(AV,10)
+    sino
+      Pos(AV,30)
+    repetir 2
+      repetir 15
+        mover
+        depositarFlor
+      derecha
+      repetir A
+        mover
+        depositarFlor
+      derecha 
+  fin
+areas
+  CJ:AreaP(1,1,1,1)
+  Equipo1:AreaPC(1,10,100,25)
+  Equipo2:AreaPC(1,30,100,45)
+  Spawn:AreaPC(2,2,5,5)
+robots
+  robot Rjefe
+  variables
+    equipo:numero
+  comenzar
+    EnviarValores
+    RecibirMensaje(equipo,*)
+    Informar(equipo)
+    RecibirMensaje(equipo,*)
+  fin
+  robot primero
+  variables
+    equipo,A,AV, OGav, OGca, flores:numero
+  comenzar
+    OGav:=PosAv
+    OGca:=PosCa
+    flores := 0
+    RecibirMensaje(equipo,jefe)
+    RecibirMensaje(A,jefe)
+    RecibirMensaje(AV,jefe)
+    si (equipo = 1)
+      Pos(AV,10)
+    sino
+      Pos(AV,30)
+    juntarRectangulo(flores,A)
+    depositarFlores(flores,equipo)
+    Pos(OGav,OGca)
+    si (equipo = 1)
+      EnviarMensaje(1,r2)
+    sino
+      EnviarMensaje(2,r4)
+  fin
+  robot segundo
+  variables
+    equipo, A, AV, OGav, OGca, esquinas, ca2:numero
+  comenzar
+    RecibirMensaje(equipo,jefe)
+    RecibirMensaje(A,jefe)
+    RecibirMensaje(AV,jefe)
+    esquinas:= A + A + 15 + 15
+    OGav:=PosAv
+    OGca:=PosCa
+    si (equipo = 1)
+      RecibirMensaje(equipo,r1)
+      ca2:=15
+    sino
+      RecibirMensaje(equipo,r3)
+      ca2:=40
+    recogerFlores(esquinas,ca2,OGav,OGca)
+    depositarRectangulo(A,AV,equipo)
+    Pos(OGav,OGca)
+    EnviarMensaje(equipo,jefe)
+  fin
+variables
+  jefe:Rjefe
+  r1:primero
+  r2:segundo
+  r3:primero
+  r4:segundo
+comenzar
+  AsignarArea(jefe,CJ)
+  AsignarArea(r1,Equipo1)
+  AsignarArea(r2,Equipo1)
+  AsignarArea(r3,Equipo2)
+  AsignarArea(r4,Equipo2)
+  AsignarArea(r1,Spawn)
+  AsignarArea(r2,Spawn)
+  AsignarArea(r3,Spawn)
+  AsignarArea(r4,Spawn)
+  Iniciar(jefe,1,1)
+  Iniciar(r1,2,2)
+  Iniciar(r2,3,3)
+  Iniciar(r3,4,4)
+  Iniciar(r4,5,5)
+fin

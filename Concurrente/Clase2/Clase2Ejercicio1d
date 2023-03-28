@@ -1,0 +1,113 @@
+programa Clase2Ej1
+procesos
+  proceso recogerFlores(ES flores:numero)
+  variables
+    aux:numero
+  comenzar
+    aux:=0
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      aux := aux + 1
+    repetir aux
+      depositarFlor
+    flores := flores + aux
+  fin
+  proceso recorrerAvenida(ES flores:numero)
+  comenzar
+    repetir 9
+      recogerFlores(flores)
+      mover
+    recogerFlores(flores)
+  fin
+areas
+  CJ:AreaP(2,1,2,1)
+  c1:AreaP(1,1,1,10)
+  c2:AreaP(2,11,2,20)
+  c3:AreaP(3,21,3,30)
+  c4:AreaP(4,31,4,40)
+  c5:AreaP(5,41,5,50)
+  c6:AreaP(6,51,6,60)
+robots
+  robot Tjefe
+  variables
+    soy, f1, f2, f3, f4, f5, f6, diff:numero
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    EnviarMensaje(4,robot4)
+    EnviarMensaje(5,robot5)
+    EnviarMensaje(6,robot6)
+    repetir 6
+      RecibirMensaje(soy,*)
+      si(soy=1)
+        RecibirMensaje(f1,robot1)
+      sino
+        si(soy=2)
+          RecibirMensaje(f2,robot2)
+        sino
+          si(soy=3)
+            RecibirMensaje(f3,robot3)
+          sino
+            si(soy=4)
+              RecibirMensaje(f4,robot4)
+            sino
+              si(soy=5)
+                RecibirMensaje(f5,robot5)
+              sino
+                RecibirMensaje(f6,robot6)
+    si (f1 > f2)
+      soy:=1
+      diff := f1
+    sino
+      diff := f2
+      soy:=2
+    si (f3 > f2)
+      diff := f3
+      soy:=3
+    si (f4 > f3)
+      diff := f4
+      soy:=4
+    si (f5 > f4)
+      diff := f5
+      soy:=5
+    si (f6 > f5)
+      diff := f6
+      soy:=6
+    Informar(soy)
+    Informar(diff)
+  fin
+  robot tipo1
+  variables
+    flores, id:numero
+  comenzar
+    RecibirMensaje(id,jefe)
+    flores := 0
+    recorrerAvenida(flores)
+    EnviarMensaje(id, jefe)
+    EnviarMensaje(flores, jefe)
+  fin
+variables
+  robot1:tipo1
+  robot2:tipo1
+  robot3:tipo1
+  robot4:tipo1
+  robot5:tipo1
+  robot6:tipo1
+  jefe:Tjefe
+comenzar
+  AsignarArea(jefe,CJ)
+  AsignarArea(robot1,c1)
+  AsignarArea(robot2,c2)
+  AsignarArea(robot3,c3)
+  AsignarArea(robot4,c4)
+  AsignarArea(robot5,c5)
+  AsignarArea(robot6,c6)
+  Iniciar(jefe,2,1)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,2,11)
+  Iniciar(robot3,3,21)
+  Iniciar(robot4,4,31)
+  Iniciar(robot5,5,41)
+  Iniciar(robot6,6,51)
+fin

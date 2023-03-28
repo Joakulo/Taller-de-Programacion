@@ -1,0 +1,107 @@
+programa Parcial2
+procesos
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores +1
+  fin
+areas
+  CJ:AreaP(20,1,20,1)
+  Tr1:AreaP(1,1,6,6)
+  Tr2:AreaP(7,1,12,6)
+  Tr3:AreaP(13,1,18,6)
+  C0:AreaPC(10,10,10,10)
+robots
+  robot Rjefe
+  variables
+    ACK,ID,cant,max, IDmax:numero
+  comenzar  
+    max:=0
+    EnviarMensaje(1,T1)
+    EnviarMensaje(2,T2)
+    EnviarMensaje(3,T3)
+    repetir 4
+      repetir 3
+        RecibirMensaje(ACK,*)
+      EnviarMensaje(ACK,T1)
+      EnviarMensaje(ACK,T2)
+      EnviarMensaje(ACK,T3)
+    repetir 3
+      Informar(0)
+      RecibirMensaje(ID,*)
+      si (ID=1)
+        RecibirMensaje(cant,T1)
+        si (cant>max)
+          max:=cant
+          IDmax:=ID
+      sino
+        si (ID=2)
+          RecibirMensaje(cant,T2)
+          si (cant>max)
+            max:=cant
+            IDmax:=ID
+        sino
+          RecibirMensaje(cant,T3)
+          si (cant>max)
+            max:=cant
+            IDmax:=ID
+    Informar(max)
+    si (IDmax=1)
+      EnviarMensaje(1,T1)
+    sino
+      EnviarMensaje(0,T1)
+    si (IDmax=2)
+      EnviarMensaje(1,T2)
+    sino
+      EnviarMensaje(0,T2)
+    si (IDmax=3)
+      EnviarMensaje(1,T3)
+    sino
+      EnviarMensaje(0,T3)
+  fin
+  
+  robot trabajador
+  variables
+    ID,av,ca,flores, ACK:numero
+  comenzar
+    ACK:=0
+    av:=PosAv
+    ca:=PosCa
+    RecibirMensaje(ID,jefe)
+    repetir 4
+      repetir 5
+        juntarFlores(flores)
+        mover
+      derecha
+      EnviarMensaje(ACK,jefe)
+      RecibirMensaje(ACK,jefe)
+    EnviarMensaje(ID,jefe)
+    EnviarMensaje(flores,jefe)
+    RecibirMensaje(ACK,jefe)
+    si (ACK=0)
+      repetir flores
+        BloquearEsquina(10,10)
+        Pos(10,10)
+        depositarFlor
+        Pos(av,ca)
+        LiberarEsquina(10,10)
+  fin
+variables
+  jefe:Rjefe
+  T1:trabajador
+  T2:trabajador
+  T3:trabajador
+comenzar
+  AsignarArea(jefe,CJ)
+  AsignarArea(T1,Tr1)
+  AsignarArea(T2,Tr2)
+  AsignarArea(T3,Tr3)
+  AsignarArea(T1,C0)
+  AsignarArea(T2,C0)
+  AsignarArea(T3,C0)
+  Iniciar(jefe,20,1)
+  Iniciar(T1,1,1)
+  Iniciar(T2,7,1)
+  Iniciar(T3,13,1)
+fin

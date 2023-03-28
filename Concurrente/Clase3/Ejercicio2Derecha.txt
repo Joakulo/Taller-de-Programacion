@@ -1,0 +1,47 @@
+  proceso SubidaPapeles1 (ES p:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:=5
+    repetir 4
+      repetir cant
+        mover
+      juntarPapeles(p)	.
+      izquierda		.
+      repetir cant
+        mover
+      derecha		.
+      juntarPapeles(p)	.
+      cant := cant - 1
+    mover
+    juntarPapeles(p)	.
+    izquierda		.
+    BloquearEsquina(16,16)
+    mover
+    juntarPapeles(p)	.
+    derecha
+    derecha
+    mover
+    LiberarEsquina(16,16)
+  fin
+  proceso SubidaPapeles2 (ES p:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:=2
+    repetir 4
+      repetir cant
+        mover
+      juntarPapeles(p)		.
+      izquierda			.
+      repetir cant
+        mover
+      derecha			.
+      juntarPapeles(p)		.
+      cant := cant + 1
+  fin
+  proceso EscaleraPapeles(ES p:numero)
+  comenzar
+    SubidaPapeles1(p)
+    SubidaPapeles2(p)
+  fin

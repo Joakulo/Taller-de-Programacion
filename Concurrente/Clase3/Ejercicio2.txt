@@ -1,0 +1,152 @@
+programa Pr3Ej2
+procesos
+  proceso izquierda
+  comenzar
+    derecha
+    derecha
+    derecha
+  fin
+  proceso juntarFlores(ES f:numero)
+  variables
+    aux:numero
+  comenzar
+    aux:=0
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      aux:= aux+1
+    repetir aux
+      depositarFlor
+    f:=f+aux
+  fin
+  proceso juntarPapeles(ES p:numero)
+  variables
+    aux:numero
+  comenzar
+    aux:=0
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      aux:= aux+1
+    repetir aux
+      depositarPapel
+    p:=p+aux
+  fin
+  proceso SubidaFlores1 (ES f:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:=5
+    repetir 4
+      repetir cant
+        mover
+      juntarFlores(f)
+      derecha
+      repetir cant
+        mover
+      izquierda
+      juntarFlores(f)
+      cant := cant - 1
+    mover
+    juntarFlores(f)
+    derecha
+    BloquearEsquina(16,16)
+    mover
+    juntarFlores(f)
+    derecha
+    derecha
+    mover
+    LiberarEsquina(16,16)
+  fin
+  proceso SubidaFlores2 (ES f:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:=2
+    repetir 4
+      repetir cant
+        mover
+      juntarFlores(f)
+      derecha
+      repetir cant
+        mover
+      izquierda
+      juntarFlores(f)
+      cant := cant + 1
+  fin
+  proceso EscaleraFlores(ES f:numero)
+  comenzar
+    SubidaFlores1(f)
+    SubidaFlores2(f)
+  fin
+  proceso SubidaPapeles1 (ES p:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:=5
+    repetir 4
+      repetir cant
+        mover
+      juntarPapeles(p)
+      izquierda
+      repetir cant
+        mover
+      derecha
+      juntarPapeles(p)
+      cant := cant - 1
+    mover
+    juntarPapeles(p)
+    izquierda
+    BloquearEsquina(16,16)
+    mover
+    juntarPapeles(p)
+    derecha
+    derecha
+    mover
+    LiberarEsquina(16,16)
+  fin
+  proceso SubidaPapeles2 (ES p:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:=2
+    repetir 4
+      repetir cant
+        mover
+      juntarPapeles(p)
+      izquierda
+      repetir cant
+        mover
+      derecha
+      juntarPapeles(p)
+      cant := cant + 1
+  fin
+  proceso EscaleraPapeles(ES p:numero)
+  comenzar
+    SubidaPapeles1(p)
+    SubidaPapeles2(p)
+  fin
+areas
+  C1:AreaP(1,1,15,30)
+  C2:AreaP(17,1,31,30)
+  C3:AreaC(16,1,16,16)
+robots
+  robot Rizquierda
+  variables
+    f:numero
+  comenzar
+    f:=0
+    si (PosAv = 1)
+      EscaleraFlores(f)
+    sino
+      EscaleraPapeles(f)
+  fin
+variables
+  robot1:Rizquierda
+  robot2:Rizquierda
+comenzar
+  AsignarArea(robot1,C1)
+  AsignarArea(robot1,C3)
+  AsignarArea(robot2,C2)
+  AsignarArea(robot2,C3)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,31,1)
+fin
